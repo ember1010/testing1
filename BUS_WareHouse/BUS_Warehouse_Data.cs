@@ -57,9 +57,9 @@ namespace BUS_WareHouse
         {
             return dalWarehouseData.getpPOWarehouseDataItemCode(itemCode);
         }
-        public DataTable getPOWarehouseDataDateTime(DateTime fromTime,DateTime toTime)
+        public DataTable getPOWarehouseDataDateTime(string po,string name,string itemCode,DateTime fromTime,DateTime toTime)
         {
-            return dalWarehouseData.getpPOWarehouseDataDateTime(fromTime, toTime);
+            return dalWarehouseData.getpPOWarehouseDataDateTime(po,name,itemCode,fromTime, toTime);
         }
         public string addLot(string lotID,int quantity,string operatorID,string po,int price,string moneyUnit)
         {

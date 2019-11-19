@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.779
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kaizen Supplier 1.0", "Kaizen Supplier 1.0\Kaizen Supplier 1.0.csproj", "{E4799A1A-E7B0-4FC5-BD27-65B3D4A1BDF5}"
 EndProject
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BUS_WareHouse", "BUS_WareHouse\BUS_WareHouse.csproj", "{ACBE96BE-2E94-4573-9046-AE7DA77F8273}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickData", "WindowsFormsApp1\QuickData.csproj", "{75BAAAF1-A689-447E-A747-736067459B75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorApp1", "BlazorApp1\BlazorApp1.csproj", "{BB946B61-7CC0-470F-BAE9-05DFA8FE38E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{75BAAAF1-A689-447E-A747-736067459B75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75BAAAF1-A689-447E-A747-736067459B75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75BAAAF1-A689-447E-A747-736067459B75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB946B61-7CC0-470F-BAE9-05DFA8FE38E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB946B61-7CC0-470F-BAE9-05DFA8FE38E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB946B61-7CC0-470F-BAE9-05DFA8FE38E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB946B61-7CC0-470F-BAE9-05DFA8FE38E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

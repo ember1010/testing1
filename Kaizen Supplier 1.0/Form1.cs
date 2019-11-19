@@ -964,7 +964,7 @@ namespace Kaizen_Supplier_1._0
         {
             txtItemCodeQuery.Enabled = false;
             dgvSumaryData.DataSource = null;
-            dgvSumaryData.DataSource = busWarehouseData.getPOWarehouseDataDateTime(Convert.ToDateTime(dtpFromDate.Text), Convert.ToDateTime(dtpToDate.Text));
+            dgvSumaryData.DataSource = busWarehouseData.getPOWarehouseDataDateTime(txtPOQuery.Text,txtCatalogQuery.Text,txtItemCodeQuery.Text,dtpFromTimeQuery.Value, dtpToTimeQuery.Value);
             dgvSumaryData.ClearSelection();
             dgvSumaryData.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             txtItemCodeQuery.Text = "";
@@ -1071,47 +1071,64 @@ namespace Kaizen_Supplier_1._0
 
             }
             int complete = 0, count = 0;
-            foreach (DataGridViewRow row in dgData.Rows)
+            DialogResult dialogResult = MessageBox.Show("Xac nhan thuc hien", "Lua chon", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
             {
-                try
+                foreach (DataGridViewRow row in dgData.Rows)
                 {
-                    DTO_Departurement dept = new DTO_Departurement();
-                    dept.Code = row.Cells[0].Value.ToString();
-                    dept.Eng = row.Cells[1].Value.ToString();
-                    dept.Vie = row.Cells[2].Value.ToString();
-                    if (busUser.addCustomer(dept))
+                    try
                     {
-                        complete++;
+                        DTO_Departurement dept = new DTO_Departurement();
+                        dept.Code = row.Cells[0].Value.ToString();
+                        dept.Eng = row.Cells[1].Value.ToString();
+                        dept.Vie = row.Cells[2].Value.ToString();
+                        if (busUser.addCustomer(dept))
+                        {
+                            complete++;
+
+                        }
+                    }
+                    catch
+                    {
 
                     }
+                    count++;
                 }
-                catch
-                {
-
-                }
-                count++;
+                MessageBox.Show("Hoàn thành " + complete + " / " + (count));
+                dgData.DataSource = busUser.getDeptTable();
             }
-            MessageBox.Show("Hoàn thành " + complete + " / " + (count));
+            else if (dialogResult == DialogResult.No)
+            {
 
-            dgData.DataSource = busUser.getDeptTable();
+            }
+            
         }
 
         private void btnQuickDeleteDept_Click(object sender, EventArgs e)
         {
-            if (dgData.SelectedRows.Count > 0)
+            DialogResult dialogResult = MessageBox.Show("Xac nhan thuc hien", "Lua chon", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
             {
-                int count = 0, complete = 0;
-                foreach (DataGridViewRow row in dgData.SelectedRows)
+                if (dgData.SelectedRows.Count > 0)
                 {
-                    if (busUser.deleteDept(row.Cells[0].Value.ToString()))
+                    int count = 0, complete = 0;
+                    foreach (DataGridViewRow row in dgData.SelectedRows)
                     {
-                        complete++;
+                        if (busUser.deleteDept(row.Cells[0].Value.ToString()))
+                        {
+                            complete++;
+                        }
+                        count++;
                     }
-                    count++;
+                    MessageBox.Show("Hoàn thành " + complete + "/" + count);
+                    dgData.DataSource = busUser.getDeptTable();
                 }
-                MessageBox.Show("Hoàn thành " + complete + "/" + count);
-                dgData.DataSource = busUser.getDeptTable();
             }
+            else if (dialogResult == DialogResult.No)
+            {
+
+            }
+            
         }
 
         private void btnQuickAddCategory_Click(object sender, EventArgs e)
@@ -1123,49 +1140,69 @@ namespace Kaizen_Supplier_1._0
                 return;
             }
             int complete = 0, count = 0;
-            foreach (DataGridViewRow row in dgData.Rows)
+            DialogResult dialogResult = MessageBox.Show("Xac nhan thuc hien", "Lua chon", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
             {
-                try
+                
+                foreach (DataGridViewRow row in dgData.Rows)
                 {
-
-                    string categories = row.Cells[0].Value.ToString();
-                    string menu = row.Cells[1].Value.ToString();
-                    if (busItemList.AddCategoriesMenu(categories, menu))
+                    try
                     {
-                        complete++;
+
+                        string categories = row.Cells[0].Value.ToString();
+                        string menu = row.Cells[1].Value.ToString();
+                        if (busItemList.AddCategoriesMenu(categories, menu))
+                        {
+                            complete++;
+                        }
                     }
-                }
-                catch
-                {
+                    catch
+                    {
 
+                    }
+                    count++;
                 }
-                count++;
+                MessageBox.Show("Hoàn thành " + complete + " / " + (count));
+
+                dgData.DataSource = busItemList.getCategoriesMenu();
             }
-            MessageBox.Show("Hoàn thành " + complete + " / " + (count));
+            else if (dialogResult == DialogResult.No)
+            {
 
-            dgData.DataSource = busItemList.getCategoriesMenu();
+            }
+            
         }
 
         private void btnQuickDeleteCategory_Click(object sender, EventArgs e)
         {
-            if (dgData.SelectedRows.Count > 0)
+            DialogResult dialogResult = MessageBox.Show("Xac nhan thuc hien", "Lua chon", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
             {
-                int count = 0, complete = 0;
-                foreach (DataGridViewRow row in dgData.SelectedRows)
+                if (dgData.SelectedRows.Count > 0)
                 {
-                    if (busItemList.DeleteCategoriesMenu(row.Cells[0].Value.ToString(), row.Cells[1].Value.ToString()))
+                    int count = 0, complete = 0;
+                    foreach (DataGridViewRow row in dgData.SelectedRows)
                     {
-                        complete++;
+                        if (busItemList.DeleteCategoriesMenu(row.Cells[0].Value.ToString(), row.Cells[1].Value.ToString()))
+                        {
+                            complete++;
+                        }
+                        count++;
                     }
-                    count++;
+                    MessageBox.Show("Hoàn thành " + complete + "/" + count);
+                    dgData.DataSource = busItemList.getCategoriesMenu();
                 }
-                MessageBox.Show("Hoàn thành " + complete + "/" + count);
-                dgData.DataSource = busItemList.getCategoriesMenu();
             }
+            else if (dialogResult == DialogResult.No)
+            {
+
+            }
+            
         }
 
         private void btnQuickAddItemList_Click(object sender, EventArgs e)
         {
+
             if (dgData.Columns.Count != 13)
             {
                 MessageBox.Show("Số cột không hợp lệ!");
@@ -1173,57 +1210,75 @@ namespace Kaizen_Supplier_1._0
                 return;
             }
             int complete = 0, count = 0;
-            foreach (DataGridViewRow row in dgData.Rows)
+            DialogResult dialogResult = MessageBox.Show("Xac nhan thuc hien", "Lua chon", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
             {
-                DTO_Item item = new DTO_Item();
-                try
+                foreach (DataGridViewRow row in dgData.Rows)
                 {
-                    item.Code = row.Cells[0].Value.ToString();
-                    item.Name = row.Cells[1].Value.ToString();
-                    item.ENGName = row.Cells[2].Value.ToString();
-                    item.Type = row.Cells[3].Value.ToString();
-                    item.OrderType = row.Cells[4].Value.ToString();
-                    item.Maker = row.Cells[5].Value.ToString();
-                    item.PackingUnit = row.Cells[6].Value.ToString();
-                    item.ExportUnit = row.Cells[7].Value.ToString();
-                    item.QtyTrans = Convert.ToInt16(row.Cells[8].Value.ToString());
-                    item.PurchaseCode = row.Cells[9].Value.ToString();
-                    item.PartNumber = row.Cells[10].Value.ToString();
-                    item.MOQ = Convert.ToInt16(row.Cells[11].Value.ToString());
-                    item.TechInfo = row.Cells[12].Value.ToString();
-
-                    if (busItemList.AddItemList(item))
+                    DTO_Item item = new DTO_Item();
+                    try
                     {
-                        complete++;
+                        item.Code = row.Cells[0].Value.ToString();
+                        item.Name = row.Cells[1].Value.ToString();
+                        item.ENGName = row.Cells[2].Value.ToString();
+                        item.Type = row.Cells[3].Value.ToString();
+                        item.OrderType = row.Cells[4].Value.ToString();
+                        item.Maker = row.Cells[5].Value.ToString();
+                        item.PackingUnit = row.Cells[6].Value.ToString();
+                        item.ExportUnit = row.Cells[7].Value.ToString();
+                        item.QtyTrans = Convert.ToInt16(row.Cells[8].Value.ToString());
+                        item.PurchaseCode = row.Cells[9].Value.ToString();
+                        item.PartNumber = row.Cells[10].Value.ToString();
+                        item.MOQ = Convert.ToInt16(row.Cells[11].Value.ToString());
+                        item.TechInfo = row.Cells[12].Value.ToString();
+
+                        if (busItemList.AddItemList(item))
+                        {
+                            complete++;
+                        }
                     }
-                }
-                catch
-                {
+                    catch
+                    {
 
+                    }
+                    count++;
                 }
-                count++;
+                MessageBox.Show("Hoàn thành " + complete + " / " + (count));
+
+                dgData.DataSource = busItemList.GetItemList();
             }
-            MessageBox.Show("Hoàn thành " + complete + " / " + (count));
+            else if (dialogResult == DialogResult.No)
+            {
 
-            dgData.DataSource = busItemList.GetItemList();
+            }
+            
         }
 
         private void btnQuickDeleteItemList_Click(object sender, EventArgs e)
         {
-            if (dgData.SelectedRows.Count > 0)
+            DialogResult dialogResult = MessageBox.Show("Xac nhan thuc hien", "Lua chon", MessageBoxButtons.YesNo);
+            if (dialogResult == DialogResult.Yes)
             {
-                int count = 0, complete = 0;
-                foreach (DataGridViewRow row in dgData.SelectedRows)
+                if (dgData.SelectedRows.Count > 0)
                 {
-                    if (busItemList.DeleteItemList(row.Cells[0].Value.ToString()))
+                    int count = 0, complete = 0;
+                    foreach (DataGridViewRow row in dgData.SelectedRows)
                     {
-                        complete++;
+                        if (busItemList.DeleteItemList(row.Cells[0].Value.ToString()))
+                        {
+                            complete++;
+                        }
+                        count++;
                     }
-                    count++;
+                    MessageBox.Show("Hoàn thành " + complete + "/" + count);
+                    dgData.DataSource = busItemList.GetItemList();
                 }
-                MessageBox.Show("Hoàn thành " + complete + "/" + count);
-                dgData.DataSource = busItemList.GetItemList();
             }
+            else if (dialogResult == DialogResult.No)
+            {
+
+            }
+            
         }
 
         private void btnQuickAddUser_Click(object sender, EventArgs e)

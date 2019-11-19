@@ -151,86 +151,166 @@ namespace DAL_WareHouse
         }
         public DataTable getpPOWarehouseData()
         {
-            SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 500 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,W.Quantity,O.OPERATOR_ID,W.LOT_ID FROM
-                                                                        (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
-                                                                        FROM (SELECT* FROM WAREHOUSE) _W
-                                                                        GROUP BY[ITEM_CODE],[PO_NUMBER],LOT_ID) W
-                                                                        INNER JOIN[dbo].[MATERIAL_ITEM] M
-                                                                        ON W.ITEM_CODE = M.ITEM_CODE
-                                                                        INNER JOIN(SELECT* FROM WAREHOUSE WHERE LOT_NUMBER = 1) A
-                                                                        ON A.ITEM_CODE = W.ITEM_CODE AND A.PO_NUMBER = W.PO_NUMBER AND A.LOT_ID = W.LOT_ID
-                                                                        INNER JOIN[dbo].[OPRECORD] O
-                                                                        ON O.LOT_ID = W.LOT_ID AND O.ACTION_TYPE = 'INPUT NEW ITEM'
-                                                                        ORDER BY A.INPUT_DATE DESC", conn);
+            SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 200 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,
+                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,C.Quantity AS TOTAL,W.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
+                                                    ,W.LOT_ID FROM
+                                                    (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
+                                                    FROM (SELECT* FROM WAREHOUSE) _W
+                                                    GROUP BY[ITEM_CODE],[PO_NUMBER],LOT_ID) W
+                                                    INNER JOIN[dbo].[MATERIAL_ITEM] M
+                                                    ON W.ITEM_CODE = M.ITEM_CODE
+                                                    INNER JOIN(SELECT* FROM WAREHOUSE WHERE LOT_NUMBER = 1) A
+                                                    ON A.ITEM_CODE = W.ITEM_CODE AND A.PO_NUMBER = W.PO_NUMBER AND A.LOT_ID = W.LOT_ID
+                                                    INNER JOIN[dbo].[OPRECORD] O
+                                                    ON O.LOT_ID = W.LOT_ID AND O.ACTION_TYPE = 'INPUT NEW ITEM'
+                                                    LEFT JOIN(
+			                                                    SELECT [PO_NUMBER],[ITEM_CODE], sum(X.QTY_TRANS) AS Quantity
+			                                                    FROM (SELECT* FROM WAREHOUSE WHERE ITEM_STATUS = 'EXPORT') X
+			                                                    GROUP BY[PO_NUMBER],[ITEM_CODE] 
+		                                                    ) Z
+                                                    ON W.ITEM_CODE = Z.ITEM_CODE AND Z.PO_NUMBER = W.PO_NUMBER
+                                                    LEFT JOIN(
+			                                                    SELECT [PO_NUMBER],[ITEM_CODE], sum(V.QTY_TRANS) AS Quantity
+			                                                    FROM (SELECT* FROM WAREHOUSE WHERE ITEM_STATUS = 'ACTIVE') V
+			                                                    GROUP BY[PO_NUMBER],[ITEM_CODE] 
+		                                                    ) C
+                                                    ON W.ITEM_CODE = C.ITEM_CODE AND C.PO_NUMBER = W.PO_NUMBER
+                                                    ORDER BY A.INPUT_DATE DESC", conn);
             DataTable dtItemList = new DataTable();
             da.Fill(dtItemList);
             return dtItemList;
         }
         public DataTable getpPOWarehouseDataPO(string PO)
         {
-            SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 500 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,W.Quantity,O.OPERATOR_ID,W.LOT_ID FROM
-                                                                        (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
-                                                                        FROM (SELECT* FROM WAREHOUSE) _W
-                                                                        GROUP BY[ITEM_CODE],[PO_NUMBER],LOT_ID) W
-                                                                        INNER JOIN[dbo].[MATERIAL_ITEM] M
-                                                                        ON W.ITEM_CODE = M.ITEM_CODE
-                                                                        INNER JOIN(SELECT* FROM WAREHOUSE WHERE LOT_NUMBER = 1) A
-                                                                        ON A.ITEM_CODE = W.ITEM_CODE AND A.PO_NUMBER = W.PO_NUMBER AND A.LOT_ID = W.LOT_ID
-                                                                        INNER JOIN[dbo].[OPRECORD] O
-                                                                        ON O.LOT_ID = W.LOT_ID AND O.ACTION_TYPE = 'INPUT NEW ITEM'
-                                                                        WHERE A.PO_NUMBER = '" + PO+ "' ORDER BY A.INPUT_DATE DESC", conn);
+            SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 200 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,
+                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,C.Quantity AS TOTAL,W.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
+                                                    ,W.LOT_ID FROM
+                                                    (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
+                                                    FROM (SELECT* FROM WAREHOUSE) _W
+                                                    GROUP BY[ITEM_CODE],[PO_NUMBER],LOT_ID) W
+                                                    INNER JOIN[dbo].[MATERIAL_ITEM] M
+                                                    ON W.ITEM_CODE = M.ITEM_CODE
+                                                    INNER JOIN(SELECT* FROM WAREHOUSE WHERE LOT_NUMBER = 1) A
+                                                    ON A.ITEM_CODE = W.ITEM_CODE AND A.PO_NUMBER = W.PO_NUMBER AND A.LOT_ID = W.LOT_ID
+                                                    INNER JOIN[dbo].[OPRECORD] O
+                                                    ON O.LOT_ID = W.LOT_ID AND O.ACTION_TYPE = 'INPUT NEW ITEM'
+                                                    LEFT JOIN(
+			                                                    SELECT [PO_NUMBER],[ITEM_CODE], sum(X.QTY_TRANS) AS Quantity
+			                                                    FROM (SELECT* FROM WAREHOUSE WHERE ITEM_STATUS = 'EXPORT') X
+			                                                    GROUP BY[PO_NUMBER],[ITEM_CODE] 
+		                                                    ) Z
+                                                    ON W.ITEM_CODE = Z.ITEM_CODE AND Z.PO_NUMBER = W.PO_NUMBER
+                                                    LEFT JOIN(
+			                                                    SELECT [PO_NUMBER],[ITEM_CODE], sum(V.QTY_TRANS) AS Quantity
+			                                                    FROM (SELECT* FROM WAREHOUSE WHERE ITEM_STATUS = 'ACTIVE') V
+			                                                    GROUP BY[PO_NUMBER],[ITEM_CODE] 
+		                                                    ) C
+                                                    ON W.ITEM_CODE = C.ITEM_CODE AND C.PO_NUMBER = W.PO_NUMBER
+                                                    WHERE A.PO_NUMBER = '" + PO + @"'
+                                                    ORDER BY A.INPUT_DATE DESC", conn);          
             DataTable dtItemList = new DataTable();
             da.Fill(dtItemList);
             return dtItemList;
         }
-        public DataTable getpPOWarehouseDataEngName(string engName)
+        public DataTable getpPOWarehouseDataEngName(string Name)
         {
-            SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 500 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,W.Quantity,O.OPERATOR_ID,W.LOT_ID FROM
-                                                                        (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
-                                                                        FROM (SELECT* FROM WAREHOUSE) _W
-                                                                        GROUP BY[ITEM_CODE],[PO_NUMBER],LOT_ID) W
-                                                                        INNER JOIN[dbo].[MATERIAL_ITEM] M
-                                                                        ON W.ITEM_CODE = M.ITEM_CODE
-                                                                        INNER JOIN(SELECT* FROM WAREHOUSE WHERE LOT_NUMBER = 1) A
-                                                                        ON A.ITEM_CODE = W.ITEM_CODE AND A.PO_NUMBER = W.PO_NUMBER AND A.LOT_ID = W.LOT_ID
-                                                                        INNER JOIN[dbo].[OPRECORD] O
-                                                                        ON O.LOT_ID = W.LOT_ID AND O.ACTION_TYPE = 'INPUT NEW ITEM'
-                                                                        WHERE M.ENG_NAME = '" + engName + "' ORDER BY A.INPUT_DATE DESC", conn);
+            SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 200 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,
+                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,C.Quantity AS TOTAL,W.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
+                                                    ,W.LOT_ID FROM
+                                                    (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
+                                                    FROM (SELECT* FROM WAREHOUSE) _W
+                                                    GROUP BY[ITEM_CODE],[PO_NUMBER],LOT_ID) W
+                                                    INNER JOIN[dbo].[MATERIAL_ITEM] M
+                                                    ON W.ITEM_CODE = M.ITEM_CODE
+                                                    INNER JOIN(SELECT* FROM WAREHOUSE WHERE LOT_NUMBER = 1) A
+                                                    ON A.ITEM_CODE = W.ITEM_CODE AND A.PO_NUMBER = W.PO_NUMBER AND A.LOT_ID = W.LOT_ID
+                                                    INNER JOIN[dbo].[OPRECORD] O
+                                                    ON O.LOT_ID = W.LOT_ID AND O.ACTION_TYPE = 'INPUT NEW ITEM'                                                    
+                                                    LEFT JOIN(
+			                                                    SELECT [PO_NUMBER],[ITEM_CODE], sum(X.QTY_TRANS) AS Quantity
+			                                                    FROM (SELECT* FROM WAREHOUSE WHERE ITEM_STATUS = 'EXPORT') X
+			                                                    GROUP BY[PO_NUMBER],[ITEM_CODE] 
+		                                                    ) Z
+                                                    ON W.ITEM_CODE = Z.ITEM_CODE AND Z.PO_NUMBER = W.PO_NUMBER
+                                                    LEFT JOIN(
+			                                                    SELECT [PO_NUMBER],[ITEM_CODE], sum(V.QTY_TRANS) AS Quantity
+			                                                    FROM (SELECT* FROM WAREHOUSE WHERE ITEM_STATUS = 'ACTIVE') V
+			                                                    GROUP BY[PO_NUMBER],[ITEM_CODE] 
+		                                                    ) C
+                                                    ON W.ITEM_CODE = C.ITEM_CODE AND C.PO_NUMBER = W.PO_NUMBER
+                                                    WHERE M.NAME = '" + Name + @"'
+                                                    ORDER BY A.INPUT_DATE DESC", conn);
             DataTable dtItemList = new DataTable();
             da.Fill(dtItemList);
             return dtItemList;
         }
         public DataTable getpPOWarehouseDataItemCode(string itemCode)
         {
-            SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 500 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,W.Quantity,O.OPERATOR_ID,W.LOT_ID FROM
-                                                                        (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
-                                                                        FROM (SELECT* FROM WAREHOUSE) _W
-                                                                        GROUP BY[ITEM_CODE],[PO_NUMBER],LOT_ID) W
-                                                                        INNER JOIN[dbo].[MATERIAL_ITEM] M
-                                                                        ON W.ITEM_CODE = M.ITEM_CODE
-                                                                        INNER JOIN(SELECT* FROM WAREHOUSE WHERE LOT_NUMBER = 1) A
-                                                                        ON A.ITEM_CODE = W.ITEM_CODE AND A.PO_NUMBER = W.PO_NUMBER AND A.LOT_ID = W.LOT_ID
-                                                                        INNER JOIN[dbo].[OPRECORD] O
-                                                                        ON O.LOT_ID = W.LOT_ID AND O.ACTION_TYPE = 'INPUT NEW ITEM'
-                                                                        WHERE W.ITEM_CODE = '" + itemCode + "' ORDER BY A.INPUT_DATE DESC", conn);
+            SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 200 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,
+                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,C.Quantity AS TOTAL,W.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
+                                                    ,W.LOT_ID FROM
+                                                    (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
+                                                    FROM (SELECT* FROM WAREHOUSE) _W
+                                                    GROUP BY[ITEM_CODE],[PO_NUMBER],LOT_ID) W
+                                                    INNER JOIN[dbo].[MATERIAL_ITEM] M
+                                                    ON W.ITEM_CODE = M.ITEM_CODE
+                                                    INNER JOIN(SELECT* FROM WAREHOUSE WHERE LOT_NUMBER = 1) A
+                                                    ON A.ITEM_CODE = W.ITEM_CODE AND A.PO_NUMBER = W.PO_NUMBER AND A.LOT_ID = W.LOT_ID
+                                                    INNER JOIN[dbo].[OPRECORD] O
+                                                    ON O.LOT_ID = W.LOT_ID AND O.ACTION_TYPE = 'INPUT NEW ITEM'
+                                                    LEFT JOIN(
+			                                                    SELECT [PO_NUMBER],[ITEM_CODE], sum(X.QTY_TRANS) AS Quantity
+			                                                    FROM (SELECT* FROM WAREHOUSE WHERE ITEM_STATUS = 'EXPORT') X
+			                                                    GROUP BY[PO_NUMBER],[ITEM_CODE] 
+		                                                    ) Z
+                                                    ON W.ITEM_CODE = Z.ITEM_CODE AND Z.PO_NUMBER = W.PO_NUMBER
+                                                    LEFT JOIN(
+			                                                    SELECT [PO_NUMBER],[ITEM_CODE], sum(V.QTY_TRANS) AS Quantity
+			                                                    FROM (SELECT* FROM WAREHOUSE WHERE ITEM_STATUS = 'ACTIVE') V
+			                                                    GROUP BY[PO_NUMBER],[ITEM_CODE] 
+		                                                    ) C
+                                                    ON W.ITEM_CODE = C.ITEM_CODE AND C.PO_NUMBER = W.PO_NUMBER
+                                                    WHERE W.ITEM_CODE = '" + itemCode + @"'
+                                                    ORDER BY A.INPUT_DATE DESC", conn);
+
             DataTable dtItemList = new DataTable();
             da.Fill(dtItemList);
             return dtItemList;
         }
-        public DataTable getpPOWarehouseDataDateTime(DateTime fromTime,DateTime toTime)
+        public DataTable getpPOWarehouseDataDateTime(string PO,string Name,string itemCode,DateTime fromTime,DateTime toTime)
         {
-            string condition = string.Format(@"( A.[INPUT_DATE] BETWEEN '{0} 00:00:00' AND '{1} 23:59:59')", fromTime.ToShortDateString(), toTime.ToShortDateString());
-            SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 500 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,W.Quantity,O.OPERATOR_ID,W.LOT_ID FROM
-                                                                        (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
-                                                                        FROM (SELECT* FROM WAREHOUSE) _W
-                                                                        GROUP BY[ITEM_CODE],[PO_NUMBER],LOT_ID) W
-                                                                        INNER JOIN[dbo].[MATERIAL_ITEM] M
-                                                                        ON W.ITEM_CODE = M.ITEM_CODE
-                                                                        INNER JOIN(SELECT* FROM WAREHOUSE WHERE LOT_NUMBER = 1) A
-                                                                        ON A.ITEM_CODE = W.ITEM_CODE AND A.PO_NUMBER = W.PO_NUMBER AND A.LOT_ID = W.LOT_ID
-                                                                        INNER JOIN[dbo].[OPRECORD] O
-                                                                        ON O.LOT_ID = W.LOT_ID AND O.ACTION_TYPE = 'INPUT NEW ITEM'
-                                                                        WHERE " + condition + " ORDER BY A.INPUT_DATE DESC", conn);
+            string TimeCondition = string.Format(@"( A.[INPUT_DATE] BETWEEN '{0} 00:00:00' AND '{1} 23:59:59')", fromTime.ToShortDateString(), toTime.ToShortDateString());
+            string condition = TimeCondition;
+            if (PO != "") condition = string.Format("{1} AND A.PO_NUMBER = '{0}' ",PO,condition);
+            if (Name != "") condition = string.Format("{1}  AND M.NAME = '{0}' ", Name, condition); 
+            if (itemCode != "") condition = string.Format("{1} AND W.ITEM_CODE = '{0}' ", itemCode,condition);
+            condition = string.Format(" WHERE {0}", condition);
+            SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 200 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,
+                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,C.Quantity AS TOTAL,W.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
+                                                    ,W.LOT_ID FROM
+                                                    (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
+                                                    FROM (SELECT* FROM WAREHOUSE) _W
+                                                    GROUP BY[ITEM_CODE],[PO_NUMBER],LOT_ID) W
+                                                    INNER JOIN[dbo].[MATERIAL_ITEM] M
+                                                    ON W.ITEM_CODE = M.ITEM_CODE
+                                                    INNER JOIN(SELECT* FROM WAREHOUSE WHERE LOT_NUMBER = 1) A
+                                                    ON A.ITEM_CODE = W.ITEM_CODE AND A.PO_NUMBER = W.PO_NUMBER AND A.LOT_ID = W.LOT_ID
+                                                    INNER JOIN[dbo].[OPRECORD] O
+                                                    ON O.LOT_ID = W.LOT_ID AND O.ACTION_TYPE = 'INPUT NEW ITEM'                                                   
+                                                    LEFT JOIN(
+			                                                    SELECT [PO_NUMBER],[ITEM_CODE], sum(X.QTY_TRANS) AS Quantity
+			                                                    FROM (SELECT* FROM WAREHOUSE WHERE ITEM_STATUS = 'EXPORT') X
+			                                                    GROUP BY[PO_NUMBER],[ITEM_CODE] 
+		                                                    ) Z
+                                                    ON W.ITEM_CODE = Z.ITEM_CODE AND Z.PO_NUMBER = W.PO_NUMBER
+                                                    LEFT JOIN(
+			                                                    SELECT [PO_NUMBER],[ITEM_CODE], sum(V.QTY_TRANS) AS Quantity
+			                                                    FROM (SELECT* FROM WAREHOUSE WHERE ITEM_STATUS = 'ACTIVE') V
+			                                                    GROUP BY[PO_NUMBER],[ITEM_CODE] 
+		                                                    ) C
+                                                    ON W.ITEM_CODE = C.ITEM_CODE AND C.PO_NUMBER = W.PO_NUMBER
+                                                    " + condition + @"
+                                                    ORDER BY A.INPUT_DATE DESC", conn);           
             DataTable dtItemList = new DataTable();
             da.Fill(dtItemList);
             return dtItemList;

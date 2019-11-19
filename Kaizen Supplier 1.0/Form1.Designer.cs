@@ -245,7 +245,7 @@
             this.InputTab.Controls.Add(this.groupBox2);
             this.InputTab.Location = new System.Drawing.Point(4, 22);
             this.InputTab.Name = "InputTab";
-            this.InputTab.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.InputTab.Padding = new System.Windows.Forms.Padding(3);
             this.InputTab.Size = new System.Drawing.Size(1312, 662);
             this.InputTab.TabIndex = 0;
             this.InputTab.Text = "Nhập hàng";
@@ -1157,7 +1157,7 @@
             this.ItemList.Controls.Add(this.groupBox1);
             this.ItemList.Location = new System.Drawing.Point(4, 22);
             this.ItemList.Name = "ItemList";
-            this.ItemList.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.ItemList.Padding = new System.Windows.Forms.Padding(3);
             this.ItemList.Size = new System.Drawing.Size(1312, 662);
             this.ItemList.TabIndex = 1;
             this.ItemList.Text = "Danh sách vật tư";
@@ -1771,7 +1771,7 @@
             // label55
             // 
             this.label55.AutoSize = true;
-            this.label55.Location = new System.Drawing.Point(1139, 152);
+            this.label55.Location = new System.Drawing.Point(1106, 152);
             this.label55.Name = "label55";
             this.label55.Size = new System.Drawing.Size(84, 13);
             this.label55.TabIndex = 11;
@@ -1779,9 +1779,9 @@
             // 
             // txtItemCodeQuery
             // 
-            this.txtItemCodeQuery.Location = new System.Drawing.Point(1229, 149);
+            this.txtItemCodeQuery.Location = new System.Drawing.Point(1196, 149);
             this.txtItemCodeQuery.Name = "txtItemCodeQuery";
-            this.txtItemCodeQuery.Size = new System.Drawing.Size(80, 20);
+            this.txtItemCodeQuery.Size = new System.Drawing.Size(113, 20);
             this.txtItemCodeQuery.TabIndex = 10;
             this.txtItemCodeQuery.TextChanged += new System.EventHandler(this.txtItemCodeQuery_TextChanged);
             this.txtItemCodeQuery.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtItemCodeQuery_KeyDown);
@@ -1789,17 +1789,17 @@
             // label54
             // 
             this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(1151, 126);
+            this.label54.Location = new System.Drawing.Point(1139, 126);
             this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(72, 13);
+            this.label54.Size = new System.Drawing.Size(51, 13);
             this.label54.TabIndex = 9;
-            this.label54.Text = "Nhập Catalog";
+            this.label54.Text = "Nhập tên";
             // 
             // txtCatalogQuery
             // 
-            this.txtCatalogQuery.Location = new System.Drawing.Point(1229, 123);
+            this.txtCatalogQuery.Location = new System.Drawing.Point(1196, 123);
             this.txtCatalogQuery.Name = "txtCatalogQuery";
-            this.txtCatalogQuery.Size = new System.Drawing.Size(80, 20);
+            this.txtCatalogQuery.Size = new System.Drawing.Size(113, 20);
             this.txtCatalogQuery.TabIndex = 8;
             this.txtCatalogQuery.TextChanged += new System.EventHandler(this.txtCatalogQuery_TextChanged);
             this.txtCatalogQuery.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCatalogQuery_KeyDown);
@@ -1807,7 +1807,7 @@
             // label53
             // 
             this.label53.AutoSize = true;
-            this.label53.Location = new System.Drawing.Point(1172, 100);
+            this.label53.Location = new System.Drawing.Point(1139, 100);
             this.label53.Name = "label53";
             this.label53.Size = new System.Drawing.Size(51, 13);
             this.label53.TabIndex = 7;
@@ -1815,9 +1815,9 @@
             // 
             // txtPOQuery
             // 
-            this.txtPOQuery.Location = new System.Drawing.Point(1229, 97);
+            this.txtPOQuery.Location = new System.Drawing.Point(1196, 97);
             this.txtPOQuery.Name = "txtPOQuery";
-            this.txtPOQuery.Size = new System.Drawing.Size(80, 20);
+            this.txtPOQuery.Size = new System.Drawing.Size(113, 20);
             this.txtPOQuery.TabIndex = 6;
             this.txtPOQuery.TextChanged += new System.EventHandler(this.txtPOQuery_TextChanged);
             this.txtPOQuery.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPOQuery_KeyDown);

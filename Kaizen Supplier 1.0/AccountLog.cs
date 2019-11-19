@@ -66,7 +66,9 @@ namespace Kaizen_Supplier_1._0
 
         private void txtInputID_TextChanged(object sender, EventArgs e)
         {
-            txtInputID.Text = RemoveSpecialCharacters(txtInputID.Text);
+            
+            txtInputID.Text = RemoveSpecialCharacters(txtInputID.Text).ToUpper();
+            txtInputID.SelectionStart = txtInputID.Text.Length;
         }
         private string RemoveSpecialCharacters(string str)
         {

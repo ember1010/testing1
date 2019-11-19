@@ -27,6 +27,7 @@ namespace Kaizen_Supplier_1._0
             this.Hide();
             Form1 frm = new Form1();
             frm.ShowDialog();
+            this.Show();
         }
 
         private void label2_Click(object sender, EventArgs e)
