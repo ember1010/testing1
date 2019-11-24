@@ -36,6 +36,7 @@
             this.txtSelectedBarcodeObj = new System.Windows.Forms.TextBox();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.button7 = new System.Windows.Forms.Button();
             this.label37 = new System.Windows.Forms.Label();
             this.label45 = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
@@ -198,6 +199,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.lbUserPermission = new System.Windows.Forms.Label();
             this.lbUserID = new System.Windows.Forms.Label();
+            this.button8 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.InputTab.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -253,6 +255,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.button8);
             this.groupBox5.Controls.Add(this.label16);
             this.groupBox5.Controls.Add(this.txtSelectedBarcodeObj);
             this.groupBox5.Controls.Add(this.button3);
@@ -268,7 +271,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(64, 28);
+            this.label16.Location = new System.Drawing.Point(6, 46);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(85, 15);
             this.label16.TabIndex = 24;
@@ -277,28 +280,29 @@
             // txtSelectedBarcodeObj
             // 
             this.txtSelectedBarcodeObj.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSelectedBarcodeObj.Location = new System.Drawing.Point(49, 50);
+            this.txtSelectedBarcodeObj.Location = new System.Drawing.Point(5, 64);
             this.txtSelectedBarcodeObj.Name = "txtSelectedBarcodeObj";
             this.txtSelectedBarcodeObj.ReadOnly = true;
-            this.txtSelectedBarcodeObj.Size = new System.Drawing.Size(125, 23);
+            this.txtSelectedBarcodeObj.Size = new System.Drawing.Size(86, 23);
             this.txtSelectedBarcodeObj.TabIndex = 23;
             // 
             // button3
             // 
             this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
             this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.ForeColor = System.Drawing.Color.Black;
-            this.button3.Location = new System.Drawing.Point(200, 15);
+            this.button3.Location = new System.Drawing.Point(97, 30);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(178, 76);
+            this.button3.Size = new System.Drawing.Size(139, 57);
             this.button3.TabIndex = 22;
-            this.button3.Text = "TẠO FILE\r\nTEM QR";
+            this.button3.Text = "Tạo QR Code Riêng";
             this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.button7);
             this.groupBox3.Controls.Add(this.label37);
             this.groupBox3.Controls.Add(this.label45);
             this.groupBox3.Controls.Add(this.button5);
@@ -322,10 +326,23 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "THÔNG TIN NHẬP";
             // 
+            // button7
+            // 
+            this.button7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
+            this.button7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button7.Location = new System.Drawing.Point(198, 498);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(81, 40);
+            this.button7.TabIndex = 28;
+            this.button7.Text = "Thêm";
+            this.button7.UseVisualStyleBackColor = false;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(44, 497);
+            this.label37.Location = new System.Drawing.Point(6, 502);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(73, 13);
             this.label37.TabIndex = 27;
@@ -342,11 +359,12 @@
             // 
             // button5
             // 
-            this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.button5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button5.Location = new System.Drawing.Point(180, 503);
+            this.button5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button5.Location = new System.Drawing.Point(115, 498);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(104, 34);
+            this.button5.Size = new System.Drawing.Size(81, 40);
             this.button5.TabIndex = 25;
             this.button5.Text = "Tìm kiếm";
             this.button5.UseVisualStyleBackColor = false;
@@ -354,7 +372,7 @@
             // 
             // txtLotFindBarcodePrinting
             // 
-            this.txtLotFindBarcodePrinting.Location = new System.Drawing.Point(38, 518);
+            this.txtLotFindBarcodePrinting.Location = new System.Drawing.Point(9, 518);
             this.txtLotFindBarcodePrinting.Name = "txtLotFindBarcodePrinting";
             this.txtLotFindBarcodePrinting.Size = new System.Drawing.Size(100, 20);
             this.txtLotFindBarcodePrinting.TabIndex = 26;
@@ -703,9 +721,10 @@
             // 
             this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Location = new System.Drawing.Point(299, 503);
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(304, 498);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(99, 34);
+            this.button2.Size = new System.Drawing.Size(94, 39);
             this.button2.TabIndex = 1;
             this.button2.Text = "Tạo LOT";
             this.button2.UseVisualStyleBackColor = false;
@@ -2059,6 +2078,20 @@
             this.lbUserID.TabIndex = 0;
             this.lbUserID.Text = "ID đăng nhập:";
             // 
+            // button8
+            // 
+            this.button8.BackColor = System.Drawing.Color.MistyRose;
+            this.button8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button8.ForeColor = System.Drawing.Color.Black;
+            this.button8.Location = new System.Drawing.Point(242, 30);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(143, 57);
+            this.button8.TabIndex = 25;
+            this.button8.Text = "Tạo QR Code Chung";
+            this.button8.UseVisualStyleBackColor = false;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2276,6 +2309,8 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label63;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
     }
 }
 

@@ -1,16 +1,13 @@
-﻿using System;
+﻿using BUS_WareHouse;
+using DTO_WareHouse;
+using QRCoder;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using BUS_WareHouse;
-using DTO_WareHouse;
-using QRCoder;
 
 namespace Kaizen_Supplier_1._0
 {
@@ -317,7 +314,8 @@ namespace Kaizen_Supplier_1._0
         }
         private void CheckBoxLoginAuthorize()
         {
-            try {
+            try
+            {
                 if (LoginUser.UserType.ToUpper() != "ADMIN")
                 {
                     tabControl1.TabPages.Remove(OverallData);
@@ -391,7 +389,7 @@ namespace Kaizen_Supplier_1._0
             }
             int quantity, price;
 
-            if (txtInputPO.Text.Length == 15 && (txtInputPO.Text.ToCharArray()[0] == 'C' || txtInputPO.Text.ToCharArray()[0] == 'M' || txtInputPO.Text.Substring(0,3) == "EBS") && cbInputItemType.Text != "" && listBox1.SelectedIndex >= 0 && int.TryParse(txtInputQuantity.Text, out quantity) && int.TryParse(txtInputPrice.Text, out price) && quantity >= 1 && quantity <= 2000 && price >= 0 && cbMoneyUnit.Text != "")
+            if (txtInputPO.Text.Length == 15 && (txtInputPO.Text.ToCharArray()[0] == 'C' || txtInputPO.Text.ToCharArray()[0] == 'M' || txtInputPO.Text.Substring(0, 3) == "EBS") && cbInputItemType.Text != "" && listBox1.SelectedIndex >= 0 && int.TryParse(txtInputQuantity.Text, out quantity) && int.TryParse(txtInputPrice.Text, out price) && quantity >= 1 && quantity <= 5000 && price >= 0 && cbMoneyUnit.Text != "")
             {
                 if (quantity / listItemNewItem[listBox1.SelectedIndex].QtyTrans <= 0 || quantity % listItemNewItem[listBox1.SelectedIndex].QtyTrans != 0)
                 {
@@ -503,7 +501,7 @@ namespace Kaizen_Supplier_1._0
             };
 
             // Draw the text onto the image
-            g.DrawString(content, new System.Drawing.Font("Arial", 7), Brushes.Black, rectf, format);
+            g.DrawString(content.Replace("qty", ""), new System.Drawing.Font("Arial", 7), Brushes.Black, rectf, format);
             rectf.Y = -1;
             format.LineAlignment = StringAlignment.Near;
             g.DrawString(itemCode, new System.Drawing.Font("Arial", 7), Brushes.Black, rectf, format);
@@ -535,11 +533,13 @@ namespace Kaizen_Supplier_1._0
         private void txtBarcodeInput_KeyDown(object sender, KeyEventArgs e)
         {
 
+
             txtBarcodeInput.Enabled = false;
             string barcode = InputExportBarcode(e);
             txtBarcodeInput.Enabled = true;
             lstExportBarcode.Sorted = true;
-            lstExportBarcode.SelectedIndex = lstExportBarcode.Items.IndexOf(barcode);
+            try { lstExportBarcode.SelectedIndex = lstExportBarcode.Items.IndexOf(barcode); }
+            catch { }
             txtBarcodeInput.Select();
         }
         private string InputExportBarcode(KeyEventArgs e)
@@ -548,6 +548,84 @@ namespace Kaizen_Supplier_1._0
             if (txtBarcodeInput.Text == "") return "";
             string inputString = txtBarcodeInput.Text;
             inputString = inputString.Trim();
+
+            #region 
+            // check nhap theo so luong
+
+            if (inputString.Contains("qty"))
+            {
+                inputString = inputString.Replace("qty", "");
+                DataTable itemTable = busWarehouseData.getTotalActiveItemInLot(inputString);              
+                List<string> listBarcode = new List<string>();
+                if (itemTable.Rows.Count > 0)
+                {
+                    
+                    foreach (DataRow row in itemTable.Rows)
+                    {
+                        string lot = row[row.Table.Columns["LOT_ID"].Ordinal].ToString();
+                        lot = string.Format("{0:D8}", int.Parse(lot));
+                        string number = row[row.Table.Columns["LOT_NUMBER"].Ordinal].ToString();
+                        number = string.Format("{0:D4}", int.Parse(number));
+                        string code = row[row.Table.Columns["VALID_CODE"].Ordinal].ToString();
+                        listBarcode.Add(string.Format("{0}-{1}-{2}", lot, number, code));
+                    }
+                    int minQty = int.Parse(itemTable.Rows[0][itemTable.Rows[0].Table.Columns["QTY_TRANS"].Ordinal].ToString());
+                    int itemQuantity = itemTable.Rows.Count * minQty;
+                    string thisLot = itemTable.Rows[0][itemTable.Rows[0].Table.Columns["LOT_ID"].Ordinal].ToString();
+                    string thisItemCode = itemTable.Rows[0][itemTable.Rows[0].Table.Columns["ITEM_CODE"].Ordinal].ToString();
+                    
+                    int qtyToExport = 0;
+                    using (FrmGetExportQty frm = new FrmGetExportQty(itemQuantity,thisLot,thisItemCode))
+                    {
+                        var result = frm.ShowDialog(); 
+                        if (frm.DialogResult == DialogResult.OK)
+                        {
+                            qtyToExport = frm.exportQty;
+                        }                     
+                    }
+                    if (qtyToExport <= 0 || qtyToExport > itemQuantity) return "";
+                    lstExportItem.Clear();
+                    lstExportBarcode.Items.Clear();
+                    updateExportItemTable(lstExportItem);
+                    qtyToExport = qtyToExport / minQty;
+                    for (int i = 0; i < qtyToExport;i++)
+                    {
+                        string item = listBarcode[i];
+                        int lot;
+                        int number;
+                        string code;
+                        DTO_Warehouse_Export_Data _itemInfo = null;
+                        try
+                        {
+                            string[] splitArr = item.Split('-');
+                            lot = int.Parse(splitArr[0]);
+                            number = int.Parse(splitArr[1]);
+                            code = splitArr[2];
+                            _itemInfo = busWarehouseData.getExportInfomation(lot, number, code);
+                        }
+                        catch
+                        {
+                        }
+                        if (_itemInfo == null) continue;
+                        lstExportItem.Add(_itemInfo);
+                        lstExportBarcode.Items.Add(item);
+                        updateExportItemTable(lstExportItem);
+                    }
+                    txtBarcodeInput.Text = "";
+                    
+                }
+              
+                else
+                {
+                    MessageBox.Show("Không tìm thấy LOT trên hệ thống!", "Kết quả", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                }
+                
+
+                return "";
+            }
+
+            #endregion
+
             if (lstExportBarcode.Items.Contains(inputString))
             {
                 txtBarcodeInput.Text = "";
@@ -555,7 +633,6 @@ namespace Kaizen_Supplier_1._0
                 MessageBox.Show("Barcode đã tồn tại", "Kết quả", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return "";
             }
-            inputString = inputString.Trim();
             inputString = RemoveSpecialCharacters(inputString);
             int inputLot;
             int inputNumber;
@@ -964,7 +1041,7 @@ namespace Kaizen_Supplier_1._0
         {
             txtItemCodeQuery.Enabled = false;
             dgvSumaryData.DataSource = null;
-            dgvSumaryData.DataSource = busWarehouseData.getPOWarehouseDataDateTime(txtPOQuery.Text,txtCatalogQuery.Text,txtItemCodeQuery.Text,dtpFromTimeQuery.Value, dtpToTimeQuery.Value);
+            dgvSumaryData.DataSource = busWarehouseData.getPOWarehouseDataDateTime(txtPOQuery.Text, txtCatalogQuery.Text, txtItemCodeQuery.Text, dtpFromTimeQuery.Value, dtpToTimeQuery.Value);
             dgvSumaryData.ClearSelection();
             dgvSumaryData.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             txtItemCodeQuery.Text = "";
@@ -1101,7 +1178,7 @@ namespace Kaizen_Supplier_1._0
             {
 
             }
-            
+
         }
 
         private void btnQuickDeleteDept_Click(object sender, EventArgs e)
@@ -1128,7 +1205,7 @@ namespace Kaizen_Supplier_1._0
             {
 
             }
-            
+
         }
 
         private void btnQuickAddCategory_Click(object sender, EventArgs e)
@@ -1143,7 +1220,7 @@ namespace Kaizen_Supplier_1._0
             DialogResult dialogResult = MessageBox.Show("Xac nhan thuc hien", "Lua chon", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
-                
+
                 foreach (DataGridViewRow row in dgData.Rows)
                 {
                     try
@@ -1170,7 +1247,7 @@ namespace Kaizen_Supplier_1._0
             {
 
             }
-            
+
         }
 
         private void btnQuickDeleteCategory_Click(object sender, EventArgs e)
@@ -1197,7 +1274,7 @@ namespace Kaizen_Supplier_1._0
             {
 
             }
-            
+
         }
 
         private void btnQuickAddItemList_Click(object sender, EventArgs e)
@@ -1251,7 +1328,7 @@ namespace Kaizen_Supplier_1._0
             {
 
             }
-            
+
         }
 
         private void btnQuickDeleteItemList_Click(object sender, EventArgs e)
@@ -1278,7 +1355,7 @@ namespace Kaizen_Supplier_1._0
             {
 
             }
-            
+
         }
 
         private void btnQuickAddUser_Click(object sender, EventArgs e)
@@ -1421,9 +1498,9 @@ namespace Kaizen_Supplier_1._0
         }
         private string RemoveSpecialCharacters(string str)
         {
-            Dictionary<string,string> filterStringDict = new Dictionary<string, string>();
-            filterStringDict.Add("--","-");
-            filterStringDict.Add("\"", ""); 
+            Dictionary<string, string> filterStringDict = new Dictionary<string, string>();
+            filterStringDict.Add("--", "-");
+            filterStringDict.Add("\"", "");
             filterStringDict.Add("!", "");
             filterStringDict.Add("@", "");
             filterStringDict.Add("#", "");
@@ -1448,9 +1525,9 @@ namespace Kaizen_Supplier_1._0
             filterStringDict.Add(".", "");
             filterStringDict.Add("/", "");
 
-            foreach(KeyValuePair<string,string> replacePair in filterStringDict)
+            foreach (KeyValuePair<string, string> replacePair in filterStringDict)
             {
-                str = str.Replace(replacePair.Key,replacePair.Value);
+                str = str.Replace(replacePair.Key, replacePair.Value);
             }
             return str;
         }
@@ -1477,7 +1554,7 @@ namespace Kaizen_Supplier_1._0
 
         private void txtBarcodeInput_TextChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         private void txtItemName_TextChanged(object sender, EventArgs e)
@@ -1533,6 +1610,84 @@ namespace Kaizen_Supplier_1._0
         private void ItemList_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DataTable dt = busWarehouseData.getWarehouseDataByLOT(txtLotFindBarcodePrinting.Text);
+                if (dt.Rows.Count < 1) return;
+                DataTable dataTable = (DataTable)dataGridView2.DataSource;
+                if (!checkColumnContain(dataTable, 0, dt.Rows[0][0].ToString()))
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        dataTable.ImportRow(row);
+                    }
+                }
+            }
+            catch { }
+            dataGridView2.SelectAll();
+            txtLotFindBarcodePrinting.Text = "";
+
+        }
+        private bool checkColumnContain(DataTable tb, int index, string str)
+        {
+            foreach (DataRow row in tb.Rows)
+            {
+                if (row[index].ToString() == str) return true;
+            }
+            return false;
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            if (dataGridView2.SelectedRows.Count < 0 || dataGridView2.SelectedRows.Count > 60)
+            {
+                MessageBox.Show("Số lượng chọn không cho phép", "Kết quả", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            List<int> lotPrinted = new List<int>();
+            Dictionary<int[], Bitmap> dictLotIDNumber = new Dictionary<int[], Bitmap>();
+            foreach (DataGridViewRow row in dataGridView2.SelectedRows)
+            {
+
+                int[] arrLotIDNumber = new int[2];
+                arrLotIDNumber[0] = int.Parse(row.Cells[0].Value.ToString());
+                if (lotPrinted.Contains(arrLotIDNumber[0])) continue;
+                lotPrinted.Add(arrLotIDNumber[0]);
+                string itemCode = row.Cells[2].Value.ToString();
+                Bitmap bmp = getQRCode(3, busWarehouseData.getBarcodeString(arrLotIDNumber[0]), itemCode);
+                //bmp = new Bitmap(bmp, new Size((int)(bmp.Width / 1.10), (int)(bmp.Height / 1.10)));
+                dictLotIDNumber.Add(arrLotIDNumber, bmp);
+            }
+            int count = 0;
+            Bitmap A4 = new Bitmap((int)(210 * 3), (int)(297 * 3.55));
+            Graphics g = Graphics.FromImage(A4);
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            Point p = new Point(barcodeImageMargin, barcodeImageMargin);
+
+            foreach (KeyValuePair<int[], Bitmap> keyValuePair in dictLotIDNumber)
+            {
+                if (p.X + keyValuePair.Value.Size.Width + barcodeImageMargin > A4.Size.Width)
+                {
+                    p.X = barcodeImageMargin;
+                    p.Y += keyValuePair.Value.Size.Height + barcodeImageMargin;
+                }
+                g.DrawImage(keyValuePair.Value, p);
+                g.Flush();
+                p.X += keyValuePair.Value.Size.Width + barcodeImageMargin;
+                count++;
+            }
+
+
+
+            Clipboard.SetDataObject(A4, false);
+            MessageBox.Show("Copy thành công " + count + " item", "Kết quả", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
         }
     }
 }

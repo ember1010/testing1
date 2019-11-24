@@ -77,6 +77,12 @@
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmGetExportQty.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmGetExportQty.Designer.cs">
+      <DependentUpon>FrmGetExportQty.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecieverInput.cs">
@@ -93,6 +99,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmGetExportQty.resx">
+      <DependentUpon>FrmGetExportQty.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

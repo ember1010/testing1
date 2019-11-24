@@ -69,6 +69,11 @@ namespace BUS_WareHouse
         {
             return dalWarehouseData.getBarcodeString(lot, number);
         }
+        public string getBarcodeString(int lot)
+        {
+            string str = dalWarehouseData.getBarcodeString(lot, 1);
+            return str.Substring(0,str.IndexOf("-"))+"qty";
+        }
         public DataTable exportLotNumber(int lot,int number,string code,string user,string customer,string reciever,DataTable dt)
         {
             DataTable newTable = dalWarehouseData.exportLOTNumber(lot, number, code, user,reciever, customer);
@@ -97,6 +102,10 @@ namespace BUS_WareHouse
         public List<string> getSavedDeparture()
         {
             return dalWarehouseData.getSavedDeparture();
+        }
+        public DataTable getTotalActiveItemInLot(string lot)
+        {
+            return dalWarehouseData.getTotalActiveItemInLot(lot);
         }
     }
 }

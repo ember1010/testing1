@@ -152,7 +152,7 @@ namespace DAL_WareHouse
         public DataTable getpPOWarehouseData()
         {
             SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 200 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,
-                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,C.Quantity AS TOTAL,W.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
+                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,W.Quantity AS TOTAL,C.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
                                                     ,W.LOT_ID FROM
                                                     (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
                                                     FROM (SELECT* FROM WAREHOUSE) _W
@@ -180,10 +180,17 @@ namespace DAL_WareHouse
             da.Fill(dtItemList);
             return dtItemList;
         }
+        public DataTable getTotalActiveItemInLot(string lot)
+        {
+            SqlDataAdapter da = new SqlDataAdapter(string.Format("SELECT * FROM [KAIZENDB].[dbo].[WAREHOUSE] WHERE LOT_ID = {0} AND ITEM_STATUS = 'ACTIVE' ORDER BY LOT_NUMBER",lot), conn);
+            DataTable dtItemList = new DataTable();
+            da.Fill(dtItemList);
+            return dtItemList;
+        }
         public DataTable getpPOWarehouseDataPO(string PO)
         {
             SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 200 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,
-                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,C.Quantity AS TOTAL,W.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
+                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,W.Quantity AS TOTAL,C.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
                                                     ,W.LOT_ID FROM
                                                     (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
                                                     FROM (SELECT* FROM WAREHOUSE) _W
@@ -215,7 +222,7 @@ namespace DAL_WareHouse
         public DataTable getpPOWarehouseDataEngName(string Name)
         {
             SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 200 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,
-                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,C.Quantity AS TOTAL,W.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
+                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,W.Quantity AS TOTAL,C.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
                                                     ,W.LOT_ID FROM
                                                     (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
                                                     FROM (SELECT* FROM WAREHOUSE) _W
@@ -247,7 +254,7 @@ namespace DAL_WareHouse
         public DataTable getpPOWarehouseDataItemCode(string itemCode)
         {
             SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 200 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,
-                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,C.Quantity AS TOTAL,W.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
+                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,W.Quantity AS TOTAL,C.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
                                                     ,W.LOT_ID FROM
                                                     (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
                                                     FROM (SELECT* FROM WAREHOUSE) _W
@@ -286,7 +293,7 @@ namespace DAL_WareHouse
             if (itemCode != "") condition = string.Format("{1} AND W.ITEM_CODE = '{0}' ", itemCode,condition);
             condition = string.Format(" WHERE {0}", condition);
             SqlDataAdapter da = new SqlDataAdapter(@"SELECT TOP 200 W.PO_NUMBER,A.INPUT_DATE,M.ENG_NAME,W.ITEM_CODE,M.NAME,
-                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,C.Quantity AS TOTAL,W.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
+                                                    M.[TECH_INFO],A.EXPORT_UNIT,A.PRICE,A.MONEY_UNIT,W.Quantity AS TOTAL,C.Quantity AS ACTIVE , Z.Quantity AS EXPORTED,O.OPERATOR_ID
                                                     ,W.LOT_ID FROM
                                                     (SELECT[ITEM_CODE], [PO_NUMBER], LOT_ID , sum(_W.QTY_TRANS) AS Quantity
                                                     FROM (SELECT* FROM WAREHOUSE) _W
